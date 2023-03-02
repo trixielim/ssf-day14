@@ -1,6 +1,7 @@
 package ssf.workshop14.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,10 +29,8 @@ public class AddressBookRepository {
 
     public List<Contact> findAll(int startIndex){
         List<Object> fromContactList = redisTemplate.opsForList().range(CONTACT_LIST, startIndex, 10);
-        List<Contact> ctcs = redisTemplate.opsForHash().multiGet(CONTACT_LIST + "_Map", fromContactList).stream().filter(Contact.class::isInstance).map(Contact.class::cast).toList();
+        List<Contact> ctcs = redisTemplate.opsForHash().multiGet(CONTACT_LIST + "_Map", fromContactList).stream().filter(Contact.class::isInstance).map(Contact.class::cast).collect(Collectors.toList());
 
         return ctcs;
-
-        
     }
 }

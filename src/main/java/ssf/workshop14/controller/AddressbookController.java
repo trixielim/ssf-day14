@@ -1,8 +1,8 @@
 package ssf.workshop14.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,25 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
 import ssf.workshop14.model.Contact;
+import ssf.workshop14.service.AddressBookService;
 
 @Controller
 @RequestMapping(path="/contact")
 public class AddressbookController {
 
     @Autowired
-    private Contact ctcs;
+    private AddressBookService adrbkSvc;
 
-    @Autowired
-    private ApplicationArguments appArgs;
-
-    @Value("${workshop13.default.data.dir}")
-    private String defaultDataDir;
-    
     @GetMapping
     public String showAddressBookForm(Model model){
+        model.addAttribute("contact", new Object());
         return "addressbook";
     }
 
@@ -37,17 +34,21 @@ public class AddressbookController {
         if(binding.hasErrors()){
             return "addressbook";
         }
-
+        adrbkSvc.save(contact);
         return "showContact";
     }
 
     @GetMapping(path="{contactId}")
     public String getContactId(Model model, @PathVariable String contactId){
+        Contact ctc = adrbkSvc.findById(contactId);
+        model.addAttribute("contact", ctc);
         return "showContact";
     }
 
     @GetMapping(path="/list")
-    public String getAllContacts(Model model){
+    public String getAllContacts(Model model, @RequestParam Integer startIndex){
+        List<Contact> ctcs = adrbkSvc.findAll(startIndex);
+        model.addAttribute("contacts", ctcs);
         return "contacts";
     }
 }
