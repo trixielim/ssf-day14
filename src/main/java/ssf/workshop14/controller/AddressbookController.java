@@ -25,7 +25,7 @@ public class AddressbookController {
 
     @GetMapping
     public String showAddressBookForm(Model model){
-        model.addAttribute("contact", new Object());
+        model.addAttribute("contact", new Contact());
         return "addressbook";
     }
 
@@ -46,7 +46,7 @@ public class AddressbookController {
     }
 
     @GetMapping(path="/list")
-    public String getAllContacts(Model model, @RequestParam Integer startIndex){
+    public String getAllContacts(Model model, @RequestParam(defaultValue = "0") Integer startIndex){
         List<Contact> ctcs = adrbkSvc.findAll(startIndex);
         model.addAttribute("contacts", ctcs);
         return "contacts";

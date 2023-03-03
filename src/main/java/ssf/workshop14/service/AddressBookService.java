@@ -25,5 +25,4 @@ public class AddressBookService {
     public List<Contact> findAll(int startIndex){
         return adrbkRepo.findAll(startIndex);
     }
-
 }

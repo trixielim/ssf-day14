@@ -109,6 +109,4 @@ public class Contact implements Serializable{
     public void setAge(int age) {
         this.age = age;
     }
-    
-      
 }
